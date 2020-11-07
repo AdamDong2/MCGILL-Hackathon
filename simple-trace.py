@@ -26,7 +26,7 @@ for ind,pl in enumerate(planeList):
     color,tIntersects = intersect(pl,rays) 
     
     
-    intersectingRayIndices = np.arange(Nrays)[np.and(leastT > tIntersects, tIntersects>0)]
+    intersectingRayIndices = np.arange(Nrays)[np.logical_and(leastT > tIntersects, tIntersects>0)]
     intersectingPlaneIndex[intersectingRayIndices] = ind 
     leastT[intersectingRayIndices] = tIntersects[intersectingRayIndices]
     rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
