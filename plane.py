@@ -12,6 +12,7 @@ class Plane:
         self.r0 = r0 
         self.r0_4 = make4from3(r0)
         self.Lambda = Lambda 
+        self.Lambda_inv = np.linalg.inv(Lambda)
 
         self.nhat_prime = nhat_prime
         nhat_prime_4 = make4from3(nhat_prime)
@@ -27,3 +28,11 @@ class Plane:
     def inPlane(self,r_prime):
         #given the r_prime coordinates of the intersections with the infinite plane, return whether we are in the plane
         return np.logical_and(np.dot(r_prime,l1_prime) < l1sq,np.dot(r_prime,l2_prime) < l2sq)
+
+    def toPrimedFrame(self,r):
+        #computes the r_prime coordinates, given a 4-vector: 
+        return np.dot(self.Lambda,r) + self.a
+
+    def fromPrimedFrame(self,r_prime):
+        #computes the r coordinates, given a 4-vector in the primed coordinate system: 
+        return np.dot(self.Lambda_inv,r_prime - self.a)
