@@ -1,10 +1,5 @@
 import numpy as np 
-
-def make4from3(vec):
-    vec_4 = np.zeros(4)
-    vec_4[0] = 0.0
-    vec_4[1:] = vec
-    return vec_4
+import * from relativity
 
 class Plane: 
     def __init__(Lambda,r0,nhat_prime,l1_prime,l2_prime):
@@ -15,6 +10,7 @@ class Plane:
 
         #we should compute nhat
         self.r0 = r0 
+        self.r0_4 = make4from3(r0)
         self.Lambda = Lambda 
 
         self.nhat_prime = nhat_prime
@@ -24,7 +20,10 @@ class Plane:
         self.a = -np.dot(Lambda,make4from3(r0))
 
         self.l1_prime = l1_prime
+        self.l1sq = np.dot(l1_prime,l1_prime)
         self.l2_prime = l2_prime 
+        self.l2sq = np.dot(l2_prime,l2_prime)
 
-    def inPlane(self,rs):
-        np.
+    def inPlane(self,r_prime):
+        #given the r_prime coordinates of the intersections with the infinite plane, return whether we are in the plane
+        return np.logical_and(np.dot(r_prime,l1_prime) < l1sq,np.dot(r_prime,l2_prime) < l2sq)
