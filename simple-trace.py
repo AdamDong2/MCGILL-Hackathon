@@ -37,26 +37,34 @@ rays = np.reshape(rays,[Nx*Ny,4])
 
 
 #compute which plane is first intersected by each ray: 
+rayInds = np.arange(Nrays)
 intersectingPlaneIndex = -1*np.ones(Nrays,dtype=np.int32)
 leastT = 1e99 * np.ones(Nrays)
 for ind,pl in enumerate(planeList):
     tIntersects = intersect(pl,rays) 
-    
-    
-    intersectingRayIndices = np.arange(Nrays)[np.logical_and(leastT > tIntersects, tIntersects>0)]
+    intersectingRayIndices = rayInds[np.logical_and(leastT > tIntersects, tIntersects>0)]
     intersectingPlaneIndex[intersectingRayIndices] = ind 
     leastT[intersectingRayIndices] = tIntersects[intersectingRayIndices]
 
 #compute the location of first intersection: 
 r1_4 = leastT*rays
 #now, compute the color contributed by each plane at the point of intersection:
+numPlaneHits = np.array([np.sum((intersectingPlaneIndex == i)) for i in range(Nplanes)])
+raysIntersectingPlanes = [ rayInds[(intersectingPlaneIndex == i)] for i in range(Nplanes)]
+
+rayRGB = np.zeros([Nrays,3],dtype = np.int32)
 for ind,pl in enumerate(planeList):
-    pass
+    intersectingRayInds = raysIntersectingPlanes[ind]
+    rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds],r1_4[intersectingRayInds], np.array([500,0,-500,0]),100.0)
     # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
 
 
 
-rayRGB = np.zeros([Nrays,3],dtype = np.int32)
 
 
 #TODO: output the ray RGBs into an image
+screenRGB = np.reshape(rayRGB,[Nx,Ny,3])
+
+import matplotlib.pyplot as plt 
+plt.imshow(screenRGB,'lower')
+plt.show()

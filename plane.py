@@ -35,9 +35,14 @@ class Plane:
             raise ValueError
 
     def toPrimedFrame(self,r):
-        #computes the r_prime coordinates, given a 4-vector: 
+        #computes the r_prime coordinates, given the 4-vectors in r: 
         return np.dot(self.Lambda,r) + self.a
 
     def fromPrimedFrame(self,r_prime):
         #computes the r coordinates, given a 4-vector in the primed coordinate system: 
         return np.dot(self.Lambda_inv,r_prime - self.a)
+
+    def boostedColor(self,rays,r_inters,source_momentum,source_intensity):
+        # assume collimated, single frequency light. Photons have source_momentum and occur in an intensity set by ``source_intensity''
+        # returns an RGB? 
+        return np.array([255,255,255],dtype=np.int32)
