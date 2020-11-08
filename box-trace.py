@@ -46,6 +46,7 @@ def boosted_reference(planeList):
     numPlaneHits = np.array([np.sum((intersectingPlaneIndex == i)) for i in range(Nplanes)])
     raysIntersectingPlanes = [ rayInds[(intersectingPlaneIndex == i)] for i in range(Nplanes)]
     raysIntersectingSky = (rayInds[intersectingPlaneIndex == -1])
+    print(raysIntersectingSky)
     rayRGB = np.zeros([Nrays,3],dtype = np.int32)
     for ind,pl in enumerate(planeList):
         intersectingRayInds = raysIntersectingPlanes[ind]
