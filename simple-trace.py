@@ -1,15 +1,18 @@
 import numpy as np 
 from intersection import intersect
+import relativity as rel 
+from plane import Plane 
 
+v = np.array([0.0,0,0])
+boost = rel.lorentz(v)
 
-v = np.array([0.6,0,0])
-
-#todo: compute Lambda 
-
-planeList = []
-
-Nplanes = len(planeList)
 #todo: plane class: 
+theta,phi = 0.,0.0
+plane1 = Plane(boost,np.array([0,0,500]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([20,0.0,0.0]),np.array([20,0.0,0.0]) )
+
+planeList = [plane1]
+Nplanes = len(planeList)
+
 #initialization 
 Nx, Ny = 190,120
 imagingX = 160
@@ -33,16 +36,27 @@ rays = np.reshape(rays,[Nx*Ny,4])
 
 
 
+#compute which plane is first intersected by each ray: 
 intersectingPlaneIndex = -1*np.ones(Nrays,dtype=np.int32)
 leastT = 1e99 * np.ones(Nrays)
-rayRGB = np.zeros([Nrays,3],dtype = int32)
 for ind,pl in enumerate(planeList):
-    color,tIntersects = intersect(pl,rays) 
+    tIntersects = intersect(pl,rays) 
     
     
     intersectingRayIndices = np.arange(Nrays)[np.logical_and(leastT > tIntersects, tIntersects>0)]
     intersectingPlaneIndex[intersectingRayIndices] = ind 
     leastT[intersectingRayIndices] = tIntersects[intersectingRayIndices]
-    rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
 
-#TODO: output the ray RGBs into an image.
+#compute the location of first intersection: 
+r1_4 = leastT*rays
+#now, compute the color contributed by each plane at the point of intersection:
+for ind,pl in enumerate(planeList):
+    pass
+    # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
+
+
+
+rayRGB = np.zeros([Nrays,3],dtype = np.int32)
+
+
+#TODO: output the ray RGBs into an image
