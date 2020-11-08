@@ -28,8 +28,6 @@ def boosted_reference(planeList):
     rays = np.reshape(rays,[Nx*Ny,4])
     #to obtain the original configuration, use: rays = np.reshape(rays,[Nx,Ny,4])
 
-
-
     #compute which plane is first intersected by each ray: 
     rayInds = np.arange(Nrays)
     intersectingPlaneIndex = -1*np.ones(Nrays,dtype=np.int32)
@@ -49,6 +47,7 @@ def boosted_reference(planeList):
     numPlaneHits = np.array([np.sum((intersectingPlaneIndex == i)) for i in range(Nplanes)])
     raysIntersectingPlanes = [ rayInds[(intersectingPlaneIndex == i)] for i in range(Nplanes)]
     raysIntersectingSky = (rayInds[intersectingPlaneIndex == -1])
+    print(raysIntersectingSky)
     rayRGB = np.zeros([Nrays,3],dtype = np.int32)
     for ind,pl in enumerate(planeList):
         intersectingRayInds = raysIntersectingPlanes[ind]
