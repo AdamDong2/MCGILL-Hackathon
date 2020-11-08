@@ -3,15 +3,16 @@ from intersection import intersect
 import relativity as rel 
 from plane import Plane 
 
-v = np.array([0.99,0,0])
+v = np.array([0.15,0,0])
 boost = rel.lorentz(v)
 
 #todo: plane class: 
 theta,phi = 0.,0.0
 z = 500 
 plane1 = Plane(boost,np.array([-z*v[0],-z*v[1],z]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([30,0.0,0.0]),np.array([0,20.0,0.0]) )
+plane2 = Plane(boost,np.array([-z*v[0],-z*v[1],z+100]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([30,0.0,0.0]),np.array([0,20.0,0.0]) , np.array([0,255,0]))
 
-planeList = [plane1]
+planeList = [plane1,plane2]
 Nplanes = len(planeList)
 
 #initialization 
