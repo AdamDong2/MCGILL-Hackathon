@@ -8,7 +8,7 @@ def intersect(pl,rays):
     numerator=np.dot(pl.r0_4,pl.nhat)
     denominator = np.matmul(rays,np.array(pl.nhat))
     index=(denominator==0)
-    print(~index)
+    # print(~index)
     t=np.zeros(len(denominator))
     t[~index]= np.divide(numerator,denominator[~index])
     t[index]=np.inf

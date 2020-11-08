@@ -3,18 +3,19 @@ from intersection import intersect
 import relativity as rel 
 from plane import Plane 
 
-v = np.array([0.0,0,0])
+v = np.array([0.99,0,0])
 boost = rel.lorentz(v)
 
 #todo: plane class: 
 theta,phi = 0.,0.0
-plane1 = Plane(boost,np.array([0,0,500]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([30,0.0,0.0]),np.array([0,20.0,0.0]) )
+z = 500 
+plane1 = Plane(boost,np.array([-z*v[0],-z*v[1],z]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([30,0.0,0.0]),np.array([0,20.0,0.0]) )
 
 planeList = [plane1]
 Nplanes = len(planeList)
 
 #initialization 
-Nx, Ny = 192,108
+Nx, Ny = 3*192,3*108
 imagingX = 160
 imagingY = 90
 imagingPlane = 200
@@ -60,7 +61,7 @@ for ind,pl in enumerate(planeList):
     intersectingRayInds = raysIntersectingPlanes[ind]
     rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds],r1_4[intersectingRayInds], np.array([500,0,-500,0]),100.0)
     # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
-print(intersectingPlaneIndex)
+# print(intersectingPlaneIndex)
 rayRGB[raysIntersectingSky] = np.array([0,25,50],dtype=np.int32)
 print('misses: ',np.size(raysIntersectingSky), 'of ', Nrays)
 
