@@ -8,9 +8,9 @@ def intersect(pl,rays):
     numerator=np.dot(pl.r0_4,pl.nhat)
 
     denominator = np.matmul(rays,pl.nhat)
-    if denominator!=0:
-        t= np.divide(numerator/denominator)
-    else:
-        t=np.inf()
+    index=(denominator==0)
+    t=np.zeros(len(denominator))
+    t[~index]= np.divide(numerator[~index]/denominator[~index])
+    t[index]=np.inf
     #t is a n dimensional array
     return t

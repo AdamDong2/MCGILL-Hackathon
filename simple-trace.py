@@ -11,8 +11,6 @@ planeList = []
 Nplanes = len(planeList)
 #todo: plane class: 
 #initialization 
-
-
 Nx, Ny = 160,90
 imagingX = 
 imagingPlane = 100
