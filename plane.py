@@ -1,8 +1,8 @@
 import numpy as np 
-import * from relativity
+from relativity import *
 
 class Plane: 
-    def __init__(Lambda,r0,nhat_prime,l1_prime,l2_prime):
+    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime):
         #Lambda is the lorentz boost from the observer frame to the plane frame 
         #r0 is the plane's position at t = 0 in the observer frame
         #nhat is the plane orientation in the plane frame
@@ -26,8 +26,13 @@ class Plane:
         self.l2sq = np.dot(l2_prime,l2_prime)
 
     def inPlane(self,r_prime):
-        #given the r_prime coordinates of the intersections with the infinite plane, return whether we are in the plane
-        return np.logical_and(np.dot(r_prime,l1_prime) < l1sq,np.dot(r_prime,l2_prime) < l2sq)
+        #given the r_prime, Nx4 coordinates of the intersections with the infinite plane, return whether we are in the plane
+        if(r_prime.shape[1] == 4):
+            return np.logical_and(np.dot(r_prime[:,1:],self.l1_prime) < self.l1sq,np.dot(r_prime[:,1:],self.l2_prime) < self.l2sq)
+        elif(r_prime.shape[1] == 3):
+            return np.logical_and(np.abs(np.dot(r_prime,self.l1_prime)) < self.l1sq, np.abs(np.dot(r_prime,self.l2_prime)) < self.l2sq)
+        else:
+            raise ValueError
 
     def toPrimedFrame(self,r):
         #computes the r_prime coordinates, given a 4-vector: 
