@@ -73,10 +73,10 @@ class Plane:
         #r_inters -- n by 4, 4 poisition of the intersection between the ray and the plane, a point in 4 space in obs ref frame
         #souce_momentum --
         # returns an RGB?
-        print('original temperature')
-        print('boosted temperature')
+        # print('original temperature')
+        # print('boosted temperature')
         boosted_temperature= self.boostedColor_raelyn(rays)*self.temperature
-        print(boosted_temperature)
+        # print(boosted_temperature)
         lam = np.arange(380., 781., 5)
         my_rgbs=[]
         for temperature in boosted_temperature:
@@ -91,6 +91,7 @@ class Plane:
         gamma=self.Lambda[0,0]
         vvec=self.Lambda[0,1:]/gamma
         vmag=np.sqrt(np.dot(vvec,vvec))
+        vmag = np.where(vmag < 1e-9,1e-16,vmag)
         vhat=vvec/vmag
         nvec=rays[:,1:]
         #return 1/(gamma*(1-vmag*np.dot(nvec,vhat)))

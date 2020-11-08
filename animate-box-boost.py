@@ -46,7 +46,7 @@ def boosted_reference(planeList):
     numPlaneHits = np.array([np.sum((intersectingPlaneIndex == i)) for i in range(Nplanes)])
     raysIntersectingPlanes = [ rayInds[(intersectingPlaneIndex == i)] for i in range(Nplanes)]
     raysIntersectingSky = (rayInds[intersectingPlaneIndex == -1])
-    print(raysIntersectingSky)
+    # print(raysIntersectingSky)
     rayRGB = np.zeros([Nrays,3],dtype = np.int32)
     for ind,pl in enumerate(planeList):
         if(numPlaneHits[ind]==0):
@@ -65,8 +65,8 @@ def boosted_reference(planeList):
     plt.imshow(np.transpose(screenRGB,axes = (1,0,2)),origin = 'lower')
 
 frames=[]
-for angle in np.linspace(0,2,10):
-    v = np.array([0.1,0.1,0.1])
+for vx in np.linspace(0,0.99,11):
+    v = np.array([vx,0.0,0.0])
     boost = rel.lorentz(v)
     #todo: plane class: 
     theta,phi = 0.,0.0
@@ -75,8 +75,10 @@ for angle in np.linspace(0,2,10):
     colors[2] = colors[3] = np.array([255,0,0])
     colors[4] = colors[5] = np.array([0,0,255])
     z = 300
-    b = Box(boost,np.array([-z*v[0],-z*v[1],z]),np.array([50,50,50]),np.pi*np.array([angle,-0.0,0.]),colors = colors)
+    b = Box(boost,np.array([-z*v[0],-z*v[1],z]),np.array([50,50,50]),np.pi*np.array([-0.25,-0.0,0.]),colors = colors)
     planeList = b.planes
+    for ind,pl in enumerate(planeList):
+        pl.temperature = 4500+ind*500
     frames.append(boosted_reference(planeList))
-gif.save(frames,'test.gif',duration=10,unit='s',between='startend')
+gif.save(frames,'boosted-box.gif',duration=10,unit='s',between='startend')
 

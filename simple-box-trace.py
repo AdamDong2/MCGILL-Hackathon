@@ -62,7 +62,7 @@ raysIntersectingSky = (rayInds[intersectingPlaneIndex == -1])
 rayRGB = np.zeros([Nrays,3],dtype = np.int32)
 for ind,pl in enumerate(planeList):
     intersectingRayInds = raysIntersectingPlanes[ind]
-    rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds],r1_4[intersectingRayInds], np.array([500,0,-500,0]),100.0)
+    rayRGB[intersectingRayInds] = pl.plane_colour #pl.boostedColor(rays[intersectingRayInds],r1_4[intersectingRayInds], np.array([500,0,-500,0]),100.0)
     # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
 # print(intersectingPlaneIndex)
 rayRGB[raysIntersectingSky] = np.array([0,25,50],dtype=np.int32)
