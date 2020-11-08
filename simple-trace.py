@@ -11,8 +11,6 @@ planeList = []
 Nplanes = len(planeList)
 #todo: plane class: 
 #initialization 
-
-
 Nx, Ny = 160,90
 pixelX,pixelY = np.meshgrid(np.arange(0,))
 Nrays = np.size(pixels) #can be more later if we want anti-aliasing
