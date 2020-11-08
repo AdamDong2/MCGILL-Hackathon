@@ -8,13 +8,13 @@ boost = rel.lorentz(v)
 
 #todo: plane class: 
 theta,phi = 0.,0.0
-plane1 = Plane(boost,np.array([0,0,500]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([20,0.0,0.0]),np.array([20,0.0,0.0]) )
+plane1 = Plane(boost,np.array([0,0,5000]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([20,0.0,0.0]),np.array([20,0.0,0.0]) )
 
 planeList = [plane1]
 Nplanes = len(planeList)
 
 #initialization 
-Nx, Ny = 190,120
+Nx, Ny = 19,12
 imagingX = 160
 imagingY = 90
 imagingPlane = 100
@@ -40,28 +40,29 @@ rays = np.reshape(rays,[Nx*Ny,4])
 rayInds = np.arange(Nrays)
 intersectingPlaneIndex = -1*np.ones(Nrays,dtype=np.int32)
 leastT = 1e99 * np.ones(Nrays)
-print(leastT)
 for ind,pl in enumerate(planeList):
     tIntersects = intersect(pl,rays) 
-    print(tIntersects.shape)
-    intersectingRayIndices = rayInds[np.logical_and(leastT > tIntersects, tIntersects>0)]
+    rInter =  rays*tIntersects[:,np.newaxis]
+    # vel_4 * tInter[:,np.newaxis]
+    intersectingRayIndices = rayInds[np.logical_and(np.logical_and(leastT > tIntersects, tIntersects>0), pl.inPlane(pl.toPrimedFrame(rInter)))]
     #np.arange(Nrays)[np.logical_and(leastT > tIntersects, tIntersects>np.zeros(Nrays))]
     intersectingPlaneIndex[intersectingRayIndices] = ind 
     leastT[intersectingRayIndices] = tIntersects[intersectingRayIndices]
 
 #compute the location of first intersection: 
-r1_4 = np.multiply(np.tile(leastT,4).reshape((Nrays,4)),rays)
+r1_4 = rays*tIntersects[:,np.newaxis] #np.multiply(np.tile(leastT,4).reshape((Nrays,4)),rays)
 #now, compute the color contributed by each plane at the point of intersection:
 numPlaneHits = np.array([np.sum((intersectingPlaneIndex == i)) for i in range(Nplanes)])
 raysIntersectingPlanes = [ rayInds[(intersectingPlaneIndex == i)] for i in range(Nplanes)]
-
+raysIntersectingSky = (rayInds[intersectingPlaneIndex == -1])
 rayRGB = np.zeros([Nrays,3],dtype = np.int32)
 for ind,pl in enumerate(planeList):
     intersectingRayInds = raysIntersectingPlanes[ind]
     rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds],r1_4[intersectingRayInds], np.array([500,0,-500,0]),100.0)
     # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
 
-
+rayRGB[raysIntersectingSky] = np.array([0,25,50],dtype=np.int32)
+print('misses: ',np.size(raysIntersectingSky))
 
 
 
@@ -69,5 +70,5 @@ for ind,pl in enumerate(planeList):
 screenRGB = np.reshape(rayRGB,[Nx,Ny,3])
 
 import matplotlib.pyplot as plt 
-plt.imshow(screenRGB,'lower')
+plt.imshow(screenRGB,origin = 'lower')
 plt.show()

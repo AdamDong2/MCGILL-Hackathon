@@ -36,7 +36,9 @@ class Plane:
 
     def toPrimedFrame(self,r):
         #computes the r_prime coordinates, given the 4-vectors in r: 
-        return np.dot(self.Lambda,r) + self.a
+        rp = np.dot(self.Lambda,r.transpose()).transpose() 
+        rp+=self.a
+        return rp # np.dot(self.Lambda,r) + self.a
 
     def fromPrimedFrame(self,r_prime):
         #computes the r coordinates, given a 4-vector in the primed coordinate system: 
