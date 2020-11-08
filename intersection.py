@@ -1,6 +1,6 @@
 import numpy as np
 
-from plane import plane 
+from plane import Plane
 
 def intersect(pl,rays):
     #rays is a n x 4 matrix
