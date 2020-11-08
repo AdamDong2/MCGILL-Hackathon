@@ -4,10 +4,9 @@ import relativity as rel
 from plane import Plane 
 from box import Box
 
-v = np.array([0.98,0,0])
+v = np.array([-0.67,0,0])
 boost = rel.lorentz(v)
 
-#todo: plane class: 
 colors = ([np.array([255,255,255])]*6)
 colors[0] = colors[1] = np.array([0,255,0])
 colors[2] = colors[3] = np.array([255,0,0])

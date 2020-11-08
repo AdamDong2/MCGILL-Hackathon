@@ -24,7 +24,7 @@ class Box:
 
         self.planes = []
 
-        #theoretically working
+        #theoretically working?
         # def addPlane(planeind,offset_ind,l1pind,l2pind):
         #     offset_p = lps_rot[offset_ind]
         #     offset = tPlane.fromPrimedFrame(rel.make4from3(offset_p))
@@ -43,7 +43,7 @@ class Box:
         #     self.planes.append(pl)
 
             
-        #borked, but kinda works? 
+        #kinda works? 
         def addPlane(planeind,offset_ind,l1pind,l2pind):
             offset_p = lps_rot[offset_ind]
             offset = np.dot(tPlane.Lambda_inv,rel.make4from3(offset_p))# tPlane.fromPrimedFrame(rel.make4from3(offset_p))
@@ -52,13 +52,9 @@ class Box:
             tcontrib = np.dot(tPlane.Lambda_inv,np.array([tprime,0,0,0]))
             offset -= tcontrib
             
-            
-            print(offset,offset[1:]-r0,tPlane.toPrimedFrame(offset))
-            # offset[1:]-=r0
             offset_sign = (1 -  2*(planeind%2))
             plane_r0 = r0 + offset[1:]*offset_sign
             
-            print(planeind,r0,offset[1:]*offset_sign)
 
             l1p = lps_rot[l1pind]
             l2p = lps_rot[l2pind]
