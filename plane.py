@@ -1,8 +1,27 @@
 import numpy as np 
 from relativity import *
+from scipy.constants import h, c, k
+
+from colours import cs_hdtv
+cs = cs_hdtv
+
+def planck(lam, T):
+    """ Returns the spectral radiance of a black body at temperature T.
+
+    Returns the spectral radiance, B(lam, T), in W.sr-1.m-2 of a black body
+    at temperature T (in K) at a wavelength lam (in nm), using Planck's law.
+
+    """
+    
+    lam_m = lam / 1.e9
+    #print(np.size(lam))
+    #print(np.size(T))
+    fac = h*c/lam_m/k/T
+    B = 2*h*c**2/lam_m**5 / (np.exp(fac) - 1)
+    return B
 
 class Plane:
-    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime,plane_colour=np.array([255,255,255])):
+    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime,plane_colour=np.array([255,255,255]),temperature=6500):
         #Lambda is the lorentz boost from the observer frame to the plane frame 
         #r0 is the plane's position at t = 0 in the observer frame
         #nhat is the plane orientation in the plane frame
@@ -24,6 +43,7 @@ class Plane:
         self.l1sq = np.dot(l1_prime,l1_prime)
         self.l2_prime = l2_prime 
         self.l2sq = np.dot(l2_prime,l2_prime)
+        self.temperature =temperature
         self.plane_colour = np.array(plane_colour) 
     def inPlane(self,r_prime):
         #given the r_prime, Nx4 coordinates of the intersections with the infinite plane, return whether we are in the plane
@@ -46,22 +66,33 @@ class Plane:
         #from plane frame to observer frame
         return np.dot(self.Lambda_inv,r_prime - self.a)
 
-    def boostedColor(self,rays,r_inters,source_momentum,source_intensity):
+    def boostedColor(self,rays):
         # assume collimated, single frequency light. Photons have source_momentum and occur in an intensity set by ``source_intensity''
         # returns an RGB?
         #rays -  n by 4 numpy array, is the 4-velocity of light ray hitting the plane from obs, norm to speed of 1
         #r_inters -- n by 4, 4 poisition of the intersection between the ray and the plane, a point in 4 space in obs ref frame
         #souce_momentum --
-                # returns an RGB?
-        return self.plane_colour
+        # returns an RGB?
+        print('original temperature')
+        print('boosted temperature')
+        boosted_temperature= self.boostedColor_raelyn(rays)*self.temperature
+        print(boosted_temperature)
+        lam = np.arange(380., 781., 5)
+        my_rgbs=[]
+        for temperature in boosted_temperature:
+            spec = planck(lam, temperature)
+            my_rgbs.append(255*cs.spec_to_rgb(spec))
+
+
+        return my_rgbs
         
 
-    def boostedColor_raelyn(self,rays,r_inters,temp_plane):
+    def boostedColor_raelyn(self,rays):
         gamma=self.Lambda[0,0]
         vvec=self.Lambda[0,1:]/gamma
         vmag=np.sqrt(np.dot(vvec,vvec))
         vhat=vvec/vmag
-        nvec=self.rays[1:]
+        nvec=rays[:,1:]
         #return 1/(gamma*(1-vmag*np.dot(nvec,vhat)))
         return gamma*(1+vmag*np.dot(nvec,vhat))
 

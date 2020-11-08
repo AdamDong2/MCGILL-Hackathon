@@ -51,7 +51,7 @@ def boosted_reference(planeList,boost):
     rayRGB = np.zeros([Nrays,3],dtype = np.int32)
     for ind,pl in enumerate(planeList):
         intersectingRayInds = raysIntersectingPlanes[ind]
-        rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds],r1_4[intersectingRayInds], np.array([500,0,-500,0]),100.0)
+        rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds])
         # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
     # print(intersectingPlaneIndex)
     rayRGB[raysIntersectingSky] = np.array([0,25,50],dtype=np.int32)
@@ -66,14 +66,14 @@ def boosted_reference(planeList,boost):
     plt.imshow(np.transpose(screenRGB,axes = (1,0,2)),origin = 'lower')
 #    plt.show()
 frames=[]
-for i in np.linspace(0,0.99,10):
+for i in np.linspace(0.1,0.99,10):
     v = np.array([i,0,0])
     boost = rel.lorentz(v)
 
     #todo: plane class: 
     theta,phi = 0.,0.0
     z = 500 
-    plane1 = Plane(boost,np.array([-z*v[0],-z*v[1],z]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([30,0.0,0.0]),np.array([0,20.0,0.0]) )
+    plane1 = Plane(boost,np.array([-z*v[0],-z*v[1],z]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([30,0.0,0.0]),np.array([0,20.0,0.0]),temperature=3000 )
 
     planeList = [plane1]
     Nplanes = len(planeList)
