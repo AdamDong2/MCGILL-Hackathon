@@ -6,8 +6,8 @@ from box import Box
 import gif
 @gif.frame
 def boosted_reference(planeList):
-    Nplanes = len(planeList)
     #initialization 
+    Nplanes = len(planeList) 
     Nx, Ny = 3*192,3*108
     imagingX = 160
     imagingY = 90
@@ -52,14 +52,12 @@ def boosted_reference(planeList):
     rayRGB = np.zeros([Nrays,3],dtype = np.int32)
     for ind,pl in enumerate(planeList):
         intersectingRayInds = raysIntersectingPlanes[ind]
-        rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds],r1_4[intersectingRayInds], np.array([500,0,-500,0]),100.0)
+        #######################IntersectionRayInds has 0 size
+        rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds])
         # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
     # print(intersectingPlaneIndex)
     rayRGB[raysIntersectingSky] = np.array([0,25,50],dtype=np.int32)
     print('misses: ',np.size(raysIntersectingSky), 'of ', Nrays)
-
-
-
     #TODO: output the ray RGBs into an image
     screenRGB = np.reshape(rayRGB,[Nx,Ny,3])
 
@@ -68,7 +66,7 @@ def boosted_reference(planeList):
 
 frames=[]
 for angle in np.linspace(0,2,10):
-    v = np.array([0.0,0,0])
+    v = np.array([0.1,0.1,0.1])
     boost = rel.lorentz(v)
     #todo: plane class: 
     theta,phi = 0.,0.0
@@ -77,9 +75,8 @@ for angle in np.linspace(0,2,10):
     colors[2] = colors[3] = np.array([255,0,0])
     colors[4] = colors[5] = np.array([0,0,255])
     z = 300
-    b = Box(boost,np.array([-z*v[0],-z*v[1],z]),np.array([50,30,40]),np.pi*np.array([angle,-0.25,0.]),colors = colors)
+    b = Box(boost,np.array([-z*v[0],-z*v[1],z]),np.array([50,50,50]),np.pi*np.array([angle,-0.0,0.]),colors = colors)
     planeList = b.planes
     frames.append(boosted_reference(planeList))
 gif.save(frames,'test.gif',duration=10,unit='s',between='startend')
-
 

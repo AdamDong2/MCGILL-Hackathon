@@ -24,13 +24,42 @@ class Box:
 
         self.planes = []
 
+        #theoretically working
+        # def addPlane(planeind,offset_ind,l1pind,l2pind):
+        #     offset_p = lps_rot[offset_ind]
+        #     offset = tPlane.fromPrimedFrame(rel.make4from3(offset_p))
+        #     print(offset,offset[1:]-r0,tPlane.toPrimedFrame(offset))
+        #     offset[1:]-=r0
+        #     offset_sign = (1 -  2*(planeind%2))
+        #     plane_r0 = r0 + offset[1:]*offset_sign
+            
+        #     print(planeind,r0,offset[1:]*offset_sign)
+
+        #     l1p = lps_rot[l1pind]
+        #     l2p = lps_rot[l2pind]
+        #     nhat_p = offset_sign*offset_sign * offset_p / np.sqrt(np.dot(offset_p,offset_p))
+
+        #     pl = Plane(Lambda,plane_r0,nhat_p,l1p,l2p,colors[planeind])
+        #     self.planes.append(pl)
+
+            
+        #borked, but kinda works? 
         def addPlane(planeind,offset_ind,l1pind,l2pind):
             offset_p = lps_rot[offset_ind]
-            offset = tPlane.fromPrimedFrame(rel.make4from3(offset_p))
-            offset[1:]-=r0
+            offset = np.dot(tPlane.Lambda_inv,rel.make4from3(offset_p))# tPlane.fromPrimedFrame(rel.make4from3(offset_p))
+            #fix the time part, because we don't know which t' should have been used in the prime frame. Basically, t' = 0 only at the origin of the plane, not the edges...
+            tprime = offset[0] / Lambda[0,0]
+            tcontrib = np.dot(tPlane.Lambda_inv,np.array([tprime,0,0,0]))
+            offset -= tcontrib
+            
+            
+            print(offset,offset[1:]-r0,tPlane.toPrimedFrame(offset))
+            # offset[1:]-=r0
             offset_sign = (1 -  2*(planeind%2))
             plane_r0 = r0 + offset[1:]*offset_sign
             
+            print(planeind,r0,offset[1:]*offset_sign)
+
             l1p = lps_rot[l1pind]
             l2p = lps_rot[l2pind]
             nhat_p = offset_sign*offset_sign * offset_p / np.sqrt(np.dot(offset_p,offset_p))
