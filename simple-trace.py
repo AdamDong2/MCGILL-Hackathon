@@ -17,7 +17,7 @@ Nplanes = len(planeList)
 Nx, Ny = 19,12
 imagingX = 160
 imagingY = 90
-imagingPlane = 100
+imagingPlane = 200
 pixelX,pixelY = np.meshgrid(np.linspace(-imagingX,imagingX,Nx),np.linspace(-imagingY,imagingY,Ny),indexing = 'ij')
 Nrays = Nx*Ny #can be more later if we want anti-aliasing
 rays = np.zeros([Nx,Ny,4])
@@ -70,5 +70,6 @@ print('misses: ',np.size(raysIntersectingSky))
 screenRGB = np.reshape(rayRGB,[Nx,Ny,3])
 
 import matplotlib.pyplot as plt 
-plt.imshow(screenRGB,origin = 'lower')
+plt.imshow(np.transpose(screenRGB,axes = (1,0,2)),origin = 'lower')
 plt.show()
+
