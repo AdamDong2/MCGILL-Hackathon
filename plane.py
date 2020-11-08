@@ -1,8 +1,8 @@
 import numpy as np 
 from relativity import *
 
-class Plane: 
-    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime,v):
+class Plane:
+    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime,plane_colour=np.array([255,255,255])):
         #Lambda is the lorentz boost from the observer frame to the plane frame 
         #r0 is the plane's position at t = 0 in the observer frame
         #nhat is the plane orientation in the plane frame
@@ -24,20 +24,22 @@ class Plane:
         self.l1sq = np.dot(l1_prime,l1_prime)
         self.l2_prime = l2_prime 
         self.l2sq = np.dot(l2_prime,l2_prime)
-
+        self.plane_colour = np.array(plane_colour) 
     def inPlane(self,r_prime):
         #given the r_prime, Nx4 coordinates of the intersections with the infinite plane, return whether we are in the plane
         if(r_prime.shape[1] == 4):
-            return np.logical_and(np.dot(r_prime[:,1:],self.l1_prime) < self.l1sq,np.dot(r_prime[:,1:],self.l2_prime) < self.l2sq)
+            d1,d2 = np.dot(r_prime[:,1:],self.l1_prime),np.dot(r_prime[:,1:],self.l2_prime)
         elif(r_prime.shape[1] == 3):
-            return np.logical_and(np.abs(np.dot(r_prime,self.l1_prime)) < self.l1sq, np.abs(np.dot(r_prime,self.l2_prime)) < self.l2sq)
+            d1,d2 = np.dot(r_prime,self.l1_prime),np.dot(r_prime,self.l2_prime)
         else:
             raise ValueError
+        return np.logical_and(np.abs(d1)<self.l1sq,np.abs(d2)<self.l2sq)
 
     def toPrimedFrame(self,r):
-        #computes the r_prime coordinates, given the 4-vectors in r:
-        #from observer to plane frame
-        return np.dot(self.Lambda,r) + self.a
+        #computes the r_prime coordinates, given the 4-vectors in r: 
+        rp = np.dot(self.Lambda,r.transpose()).transpose() 
+        rp+=self.a
+        return rp # np.dot(self.Lambda,r) + self.a
 
     def fromPrimedFrame(self,r_prime):
         #computes the r coordinates, given a 4-vector in the primed coordinate system:
@@ -50,7 +52,10 @@ class Plane:
         #rays -  n by 4 numpy array, is the 4-velocity of light ray hitting the plane from obs, norm to speed of 1
         #r_inters -- n by 4, 4 poisition of the intersection between the ray and the plane, a point in 4 space in obs ref frame
         #souce_momentum --
-        return np.array([255,255,255],dtype=np.int32)
+                # returns an RGB?
+        return self.plane_colour
+        
+
     def boostedColor_raelyn(self,rays,r_inters,temp_plane):
         gamma=self.Lambda[0,0]
         vvec=self.Lambda[0,1:]/gamma
@@ -59,3 +64,4 @@ class Plane:
         nvec=self.rays[1:]
         #return 1/(gamma*(1-vmag*np.dot(nvec,vhat)))
         return gamma*(1+vmag*np.dot(nvec,vhat))
+

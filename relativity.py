@@ -28,6 +28,8 @@ def lorentz(v):
     vs = np.sqrt(vsq)
     gam = gamma(vs)
 
+    if(vsq < 1e-15):
+        return np.identity(4)
 
     boost = np.zeros((4,4))
     boost[0,0] = gam
