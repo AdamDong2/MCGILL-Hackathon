@@ -62,7 +62,10 @@ def boosted_reference(planeList):
     screenRGB = np.reshape(rayRGB,[Nx,Ny,3])
 
     import matplotlib.pyplot as plt 
-    plt.imshow(np.transpose(screenRGB,axes = (1,0,2)),origin = 'lower')
+    fig,ax=plt.subplots(1)
+    ax.imshow(np.transpose(screenRGB,axes = (1,0,2)),origin = 'lower')
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
 
 frames=[]
 for angle in np.linspace(0,2,10):

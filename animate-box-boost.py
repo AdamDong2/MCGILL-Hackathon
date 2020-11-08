@@ -8,7 +8,7 @@ import gif
 def boosted_reference(planeList):
     #initialization 
     Nplanes = len(planeList) 
-    Nx, Ny = 3*192,3*108
+    Nx, Ny = 1920,1080
     imagingX = 160
     imagingY = 90
     imagingPlane = 200
@@ -63,6 +63,9 @@ def boosted_reference(planeList):
 
     import matplotlib.pyplot as plt 
     plt.imshow(np.transpose(screenRGB,axes = (1,0,2)),origin = 'lower')
+    plt.gca().axes.get_yaxis().set_visible(False)
+    plt.gca().axes.get_xaxis().set_visible(False)
+    plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, hspace = 0, wspace = 0)
 
 frames=[]
 for vx in np.linspace(0,0.99,11):
