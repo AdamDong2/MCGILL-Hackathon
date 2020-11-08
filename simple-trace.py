@@ -80,5 +80,4 @@ def shapeBack(arr):
     return np.reshape(arr,pixelX.shape)
 
 
-r1p_4 = plane1.toPrimedFrame(r1_4)
 # print(plane1.inPlane(r1p_4))
