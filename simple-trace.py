@@ -8,13 +8,13 @@ boost = rel.lorentz(v)
 
 #todo: plane class: 
 theta,phi = 0.,0.0
-plane1 = Plane(boost,np.array([0,0,5000]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([20,0.0,0.0]),np.array([20,0.0,0.0]) )
+plane1 = Plane(boost,np.array([0,0,500]),np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]),np.array([30,0.0,0.0]),np.array([0,20.0,0.0]) )
 
 planeList = [plane1]
 Nplanes = len(planeList)
 
 #initialization 
-Nx, Ny = 19,12
+Nx, Ny = 192,108
 imagingX = 160
 imagingY = 90
 imagingPlane = 200
@@ -62,7 +62,7 @@ for ind,pl in enumerate(planeList):
     # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
 
 rayRGB[raysIntersectingSky] = np.array([0,25,50],dtype=np.int32)
-print('misses: ',np.size(raysIntersectingSky))
+print('misses: ',np.size(raysIntersectingSky), 'of ', Nrays)
 
 
 
@@ -73,3 +73,10 @@ import matplotlib.pyplot as plt
 plt.imshow(np.transpose(screenRGB,axes = (1,0,2)),origin = 'lower')
 plt.show()
 
+
+def shapeBack(arr):
+    return np.reshape(arr,pixelX.shape)
+
+
+r1p_4 = plane1.toPrimedFrame(r1_4)
+# print(plane1.inPlane(r1p_4))

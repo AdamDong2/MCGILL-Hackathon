@@ -28,11 +28,12 @@ class Plane:
     def inPlane(self,r_prime):
         #given the r_prime, Nx4 coordinates of the intersections with the infinite plane, return whether we are in the plane
         if(r_prime.shape[1] == 4):
-            return np.logical_and(np.dot(r_prime[:,1:],self.l1_prime) < self.l1sq,np.dot(r_prime[:,1:],self.l2_prime) < self.l2sq)
+            d1,d2 = np.dot(r_prime[:,1:],self.l1_prime),np.dot(r_prime[:,1:],self.l2_prime)
         elif(r_prime.shape[1] == 3):
-            return np.logical_and(np.abs(np.dot(r_prime,self.l1_prime)) < self.l1sq, np.abs(np.dot(r_prime,self.l2_prime)) < self.l2sq)
+            d1,d2 = np.dot(r_prime,self.l1_prime),np.dot(r_prime,self.l2_prime)
         else:
             raise ValueError
+        return np.logical_and(np.abs(d1)<self.l1sq,np.abs(d2)<self.l2sq)
 
     def toPrimedFrame(self,r):
         #computes the r_prime coordinates, given the 4-vectors in r: 
