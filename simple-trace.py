@@ -60,7 +60,7 @@ for ind,pl in enumerate(planeList):
     intersectingRayInds = raysIntersectingPlanes[ind]
     rayRGB[intersectingRayInds] = pl.boostedColor(rays[intersectingRayInds],r1_4[intersectingRayInds], np.array([500,0,-500,0]),100.0)
     # rayRGB[intersectingRayIndices,:] = color[intersectingRayIndices]
-
+print(intersectingPlaneIndex)
 rayRGB[raysIntersectingSky] = np.array([0,25,50],dtype=np.int32)
 print('misses: ',np.size(raysIntersectingSky))
 

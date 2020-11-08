@@ -2,7 +2,7 @@ import numpy as np
 from relativity import *
 
 class Plane: 
-    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime):
+    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime,plane_colour=np.array([255,255,255])):
         #Lambda is the lorentz boost from the observer frame to the plane frame 
         #r0 is the plane's position at t = 0 in the observer frame
         #nhat is the plane orientation in the plane frame
@@ -24,7 +24,7 @@ class Plane:
         self.l1sq = np.dot(l1_prime,l1_prime)
         self.l2_prime = l2_prime 
         self.l2sq = np.dot(l2_prime,l2_prime)
-
+        self.plane_colour = np.array(plane_colour) 
     def inPlane(self,r_prime):
         #given the r_prime, Nx4 coordinates of the intersections with the infinite plane, return whether we are in the plane
         if(r_prime.shape[1] == 4):
@@ -47,4 +47,4 @@ class Plane:
     def boostedColor(self,rays,r_inters,source_momentum,source_intensity):
         # assume collimated, single frequency light. Photons have source_momentum and occur in an intensity set by ``source_intensity''
         # returns an RGB? 
-        return np.array([255,255,255],dtype=np.int32)
+        return self.plane_colour
