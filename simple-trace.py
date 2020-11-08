@@ -19,7 +19,7 @@ imagingX = 160
 imagingY = 90
 imagingPlane = 100
 pixelX,pixelY = np.meshgrid(np.linspace(-imagingX,imagingX,Nx),np.linspace(-imagingY,imagingY,Ny),indexing = 'ij')
-Nrays = np.size(Nx*Ny) #can be more later if we want anti-aliasing
+Nrays = Nx*Ny #can be more later if we want anti-aliasing
 rays = np.zeros([Nx,Ny,4])
 rays[:,:,0] = 1.0
 rays[:,:,1] = pixelX
@@ -39,16 +39,18 @@ rays = np.reshape(rays,[Nx*Ny,4])
 #compute which plane is first intersected by each ray: 
 intersectingPlaneIndex = -1*np.ones(Nrays,dtype=np.int32)
 leastT = 1e99 * np.ones(Nrays)
+print(leastT)
 for ind,pl in enumerate(planeList):
     tIntersects = intersect(pl,rays) 
     
-    
-    intersectingRayIndices = np.arange(Nrays)[np.logical_and(leastT > tIntersects, tIntersects>0)]
+    print(leastT.shape)
+    print(tIntersects.shape)
+    intersectingRayIndices = np.arange(Nrays)[np.logical_and(leastT > tIntersects, tIntersects>np.zeros(Nrays))]
     intersectingPlaneIndex[intersectingRayIndices] = ind 
     leastT[intersectingRayIndices] = tIntersects[intersectingRayIndices]
 
 #compute the location of first intersection: 
-r1_4 = leastT*rays
+r1_4 = np.multiply(np.tile(leastT,4).reshape((Nrays,4)),rays)
 #now, compute the color contributed by each plane at the point of intersection:
 for ind,pl in enumerate(planeList):
     pass
