@@ -14,9 +14,16 @@ Nplanes = len(planeList)
 
 
 Nx, Ny = 160,90
-pixelX,pixelY = np.meshgrid(np.arange(0,))
+imagingX = 
+imagingPlane = 100
+pixelX,pixelY = np.meshgrid(np.linspace(-imagingX,imagingX,Nx),np.linspace(-imagingY,imagingY,Ny))
 Nrays = np.size(pixels) #can be more later if we want anti-aliasing
-rays = np.zeros([Nrays,4])
+rays = np.zeros([Nx,Ny,4])
+rays[:,:,0] = 1.0
+rays[:,:,1] = pixelX
+rays[:,:,2] = pixelY
+rays[:,:,3] = imagingPlane
+rays[:,:,1:] /= 
 
 
 intersectingPlaneIndex = -1*np.ones(Nrays,dtype=np.int32)
