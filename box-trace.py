@@ -15,7 +15,7 @@ colors[0] = colors[1] = np.array([0,255,0])
 colors[2] = colors[3] = np.array([255,0,0])
 colors[4] = colors[5] = np.array([0,0,255])
 z = 300
-b = Box(boost,np.array([-z*v[0],-z*v[1],z]),np.array([50,30,40]),np.array([0.75*np.pi,0.0,0.]),colors = colors)
+b = Box(boost,np.array([-z*v[0],-z*v[1],z]),np.array([50,30,40]),np.pi*np.array([-0.20,-0.25,0.]),colors = colors)
 planeList = b.planes
 Nplanes = len(planeList)
 
