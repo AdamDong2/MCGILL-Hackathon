@@ -2,7 +2,7 @@ import numpy as np
 from relativity import *
 
 class Plane: 
-    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime):
+    def __init__(self,Lambda,r0,nhat_prime,l1_prime,l2_prime,v):
         #Lambda is the lorentz boost from the observer frame to the plane frame 
         #r0 is the plane's position at t = 0 in the observer frame
         #nhat is the plane orientation in the plane frame
@@ -35,14 +35,27 @@ class Plane:
             raise ValueError
 
     def toPrimedFrame(self,r):
-        #computes the r_prime coordinates, given the 4-vectors in r: 
+        #computes the r_prime coordinates, given the 4-vectors in r:
+        #from observer to plane frame
         return np.dot(self.Lambda,r) + self.a
 
     def fromPrimedFrame(self,r_prime):
-        #computes the r coordinates, given a 4-vector in the primed coordinate system: 
+        #computes the r coordinates, given a 4-vector in the primed coordinate system:
+        #from plane frame to observer frame
         return np.dot(self.Lambda_inv,r_prime - self.a)
 
     def boostedColor(self,rays,r_inters,source_momentum,source_intensity):
         # assume collimated, single frequency light. Photons have source_momentum and occur in an intensity set by ``source_intensity''
-        # returns an RGB? 
+        # returns an RGB?
+        #rays -  n by 4 numpy array, is the 4-velocity of light ray hitting the plane from obs, norm to speed of 1
+        #r_inters -- n by 4, 4 poisition of the intersection between the ray and the plane, a point in 4 space in obs ref frame
+        #souce_momentum --
         return np.array([255,255,255],dtype=np.int32)
+    def boostedColor_raelyn(self,rays,r_inters,temp_plane):
+        gamma=self.Lambda[0,0]
+        vvec=self.Lambda[0,1:]/gamma
+        vmag=np.sqrt(np.dot(vvec,vvec))
+        vhat=vvec/vmag
+        nvec=self.rays[1:]
+        #return 1/(gamma*(1-vmag*np.dot(nvec,vhat)))
+        return gamma*(1+vmag*np.dot(nvec,vhat))
